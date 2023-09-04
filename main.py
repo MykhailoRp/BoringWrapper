@@ -129,6 +129,9 @@ def get_activity(**request_values):
 
     resp = req.get("http://www.boredapi.com/api/activity/", params=request_values)
 
+    if resp.status_code != 200:
+        raise Exception(f"{resp.status_code} {resp.text}")
+
     r_j = resp.json()
 
     if 'error' in r_j:
