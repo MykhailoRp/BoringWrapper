@@ -111,17 +111,17 @@ class activity_class:
 
 class DB_interface:
     def __init__(self, db_location):
-        self.connection = sqlite3.connect(db_location)
-        self.cursor = self.connection.cursor()
+        self._connection = sqlite3.connect(db_location)
+        self._cursor = self._connection.cursor()
 
     def add_task(self, act: activity_class):
-        self.cursor.execute(f'INSERT INTO tasks {act.db_format()}')
+        self._cursor.execute(f'INSERT INTO tasks {act.db_format()}')
 
-        self.connection.commit()
+        self._connection.commit()
 
-    def list(self):
-        res = self.cursor.execute("SELECT * FROM tasks")
-        return "\n".join(map(str, res.fetchall()[-5:]))
+    def list(self, depth):
+        res = self._cursor.execute("SELECT * FROM tasks")
+        return res.fetchall()[-depth:]
 
 
 
@@ -153,6 +153,6 @@ if __name__ == "__main__":
 
             print(task)
         else:
-            print(DB.list())
+            print("\n".join(map(str, DB.list(5))))
     except Exception as e:
         print("Encountered an error:", e)
